@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="kr">
 <head>
@@ -13,19 +13,19 @@
 <div class="container" id="main">
    <div class="col-md-12 col-sm-12 col-lg-10 col-lg-offset-1">
       <div class="panel panel-default content-main">
-          <form name="question" method="post" action="/qna/update">
-          	  <input type="hidden" name="questionId" value="${question.questionId}" />
+          <form:form modelAttribute="question" name="question" method="post" action="/qna/${question.questionId}">
+          	  <input type="hidden" name="_method" value="put"/>
               <div class="form-group">
                   <label for="title">제목</label>
-                  <input type="text" class="form-control" id="title" name="title" placeholder="제목" value="${question.title}"/>
+                  <form:input path="title" type="text" class="form-control" placeholder="제목"/>
               </div>
               <div class="form-group">
                   <label for="contents">내용</label>
-                  <textarea name="contents" id="contents" rows="5" class="form-control">${question.contents}</textarea>
+                  <form:textarea path="contents" rows="5" class="form-control"/>
               </div>
               <button type="submit" class="btn btn-success clearfix pull-right">수정하기</button>
               <div class="clearfix" />
-          </form>
+          </form:form>
         </div>
     </div>
 </div>

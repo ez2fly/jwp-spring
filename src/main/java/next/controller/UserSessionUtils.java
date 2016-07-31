@@ -33,4 +33,12 @@ public class UserSessionUtils {
 		
 		return user.isSameUser(getUserFromSession(session));
 	}
+	
+	public static void setUser(HttpSession session, User user) {
+		session.setAttribute(USER_SESSION_KEY, user);
+	}
+	
+	public static void remove(HttpSession session) {
+		session.removeAttribute(USER_SESSION_KEY);
+	}
 }
