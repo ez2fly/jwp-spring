@@ -22,7 +22,9 @@ public class MyWebInitializer implements WebApplicationInitializer {
 		cef.setEncoding("UTF-8");
 		cef.setForceEncoding(true);
 		servletContext.addFilter("characterEncodingFilter", cef).addMappingForUrlPatterns(null, false, "/*");
-
+		
+		// 아래 HiddenHttpMethodFilter 필터로 _method 의 값으로 put, delete 를 넘겨서 동작되도록 했다.
+		// 해당 클래스 생성해서 인스턴스를 setMethodParam 으로 "_method" 대신 다른 이름으로 처리할 수 있다.
 		servletContext.addFilter("httpMethodFilter", HiddenHttpMethodFilter.class)
 				.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
 

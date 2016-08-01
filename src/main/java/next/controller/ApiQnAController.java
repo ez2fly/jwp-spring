@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import core.jdbc.DataAccessException;
 import core.mvc.ModelAndView;
 import next.CannotDeleteException;
+import next.LoginUser;
 import next.dao.AnswerDao;
 import next.dao.QuestionDao;
 import next.model.Answer;
@@ -39,16 +40,16 @@ public class ApiQnAController {
 	}
 	
 	@RequestMapping(value="/deleteQuestion", method = RequestMethod.POST)
-	public Map<String, Object> deleteQuestion(HttpSession session, @RequestParam(value="questionId") String id, Model model) {
+	public Map<String, Object> deleteQuestion(@LoginUser User user, @RequestParam(value="questionId") String id, Model model) {
 		Map<String, Object> ret = new HashMap<String, Object>();
-		if (!UserSessionUtils.isLogined(session)) {
+		if (user == null) {
 			ret.put("result", Result.fail("Login is required"));
 			return ret;
 		}
 		
 		long questionId = Long.parseLong(id);
 		try {
-			qnaService.deleteQuestion(questionId, UserSessionUtils.getUserFromSession(session));
+			qnaService.deleteQuestion(questionId, user);
 			ret.put("result", Result.ok());
 		} catch (CannotDeleteException e) {
 			ret.put("result", Result.fail(e.getMessage()));
@@ -57,14 +58,13 @@ public class ApiQnAController {
 	}
 	
 	@RequestMapping(value="/addAnswer", method = RequestMethod.POST)
-	public Map<String, Object> addAnswer(HttpSession session, @RequestParam(value="questionId") String id, @RequestParam(value="contents") String contents) {
+	public Map<String, Object> addAnswer(@LoginUser User user, @RequestParam(value="questionId") String id, @RequestParam(value="contents") String contents) {
 		Map<String, Object> ret = new HashMap<String, Object>();
-		if (!UserSessionUtils.isLogined(session)) {
+		if (user == null) {
 			ret.put("result", Result.fail("Login is required"));
 			return ret;
 		}
     	
-    	User user = UserSessionUtils.getUserFromSession(session);
 		Answer answer = new Answer(user.getUserId(), 
 									contents, 
 									Long.parseLong(id));

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import next.LoginUser;
 import next.dao.UserDao;
 import next.model.User;
 
@@ -21,8 +22,8 @@ public class UserController {
 	private UserDao userDao = UserDao.getInstance();
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(HttpSession session, Model model) throws Exception {
-		if (!UserSessionUtils.isLogined(session)) {
+	public String index(@LoginUser User user, Model model) throws Exception {
+		if (user == null) {
 			return "redirect:/users/loginForm";
 		}
 		model.addAttribute("users", userDao.findAll());
@@ -74,9 +75,9 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/{userId}/edit", method = RequestMethod.GET)
-	public String edit(HttpSession session, @PathVariable String userId, Model model) throws Exception {
+	public String edit(@LoginUser User curUser, @PathVariable String userId, Model model) throws Exception {
 		User user = userDao.findByUserId(userId);
-		if (!UserSessionUtils.isSameUser(session, user)) {
+		if (!user.isSameUser(curUser)) {
         	throw new IllegalStateException("다른 사용자의 정보를 수정할 수 없습니다.");
         }
     	model.addAttribute("user", user);
@@ -84,8 +85,8 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/{userId}", method = RequestMethod.PUT)
-	public String update(HttpSession session, User user) throws Exception {
-		if (!UserSessionUtils.isSameUser(session, user)) {
+	public String update(@LoginUser User curUser, User user) throws Exception {
+		if (!user.isSameUser(curUser)) {
         	throw new IllegalStateException("다른 사용자의 정보를 수정할 수 없습니다.");
         }
         

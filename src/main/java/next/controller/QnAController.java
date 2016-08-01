@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import next.CannotDeleteException;
+import next.LoginUser;
 import next.dao.AnswerDao;
 import next.dao.QuestionDao;
 import next.model.Answer;
@@ -42,8 +43,8 @@ public class QnAController {
 	}
 	
 	@RequestMapping(value="/new", method = RequestMethod.GET)
-	public String form(HttpSession session, Model model) {
-		if (!UserSessionUtils.isLogined(session)) {
+	public String form(@LoginUser User user, Model model) {
+		if (user == null) {
 			return "redirect:/users/loginForm";
 		}
 		model.addAttribute("question", new Question());
@@ -51,25 +52,24 @@ public class QnAController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public String create(HttpSession session, @RequestParam String title, @RequestParam String contents) {
-		if (!UserSessionUtils.isLogined(session)) {
+	public String create(@LoginUser User user, @RequestParam String title, @RequestParam String contents) {
+		if (user == null) {
 			return "redirect:/users/loginForm";
 		}
-    	User user = UserSessionUtils.getUserFromSession(session);
     	Question question = new Question(user.getUserId(), title, contents);
     	questionDao.insert(question);
 		return "redirect:/";
 	}
 	
 	@RequestMapping(value="/{id}/edit", method = RequestMethod.GET)
-	public String edit(HttpSession session, @PathVariable String id, Model model) {
-		if (!UserSessionUtils.isLogined(session)) {
+	public String edit(@LoginUser User user, @PathVariable String id, Model model) {
+		if (user == null) {
 			return "redirect:/users/loginForm";
 		}
 		
 		long questionId = Long.parseLong(id);
 		Question question = questionDao.findById(questionId);
-		if (!question.isSameUser(UserSessionUtils.getUserFromSession(session))) {
+		if (!question.isSameUser(user)) {
 			throw new IllegalStateException("다른 사용자가 쓴 글을 수정할 수 없습니다.");
 		}
 		model.addAttribute("question", question);
@@ -77,14 +77,14 @@ public class QnAController {
 	}
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.PUT)
-	public String update(HttpSession session, @PathVariable String id, @RequestParam String title, @RequestParam String contents) {
-		if (!UserSessionUtils.isLogined(session)) {
+	public String update(@LoginUser User user, @PathVariable String id, @RequestParam String title, @RequestParam String contents) {
+		if (user == null) {
 			return "redirect:/users/loginForm";
 		}
 		
 		long questionId = Long.parseLong(id);
 		Question question = questionDao.findById(questionId);
-		if (!question.isSameUser(UserSessionUtils.getUserFromSession(session))) {
+		if (!question.isSameUser(user)) {
 			throw new IllegalStateException("다른 사용자가 쓴 글을 수정할 수 없습니다.");
 		}
 		
@@ -95,14 +95,14 @@ public class QnAController {
 	}
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.DELETE)
-	public String destroy(HttpSession session, @PathVariable String id, Model model) {
-		if (!UserSessionUtils.isLogined(session)) {
+	public String destroy(@LoginUser User user, @PathVariable String id, Model model) {
+		if (user == null) {
 			return "redirect:/users/loginForm";
 		}
 		
 		long questionId = Long.parseLong(id);
 		try {
-			qnaService.deleteQuestion(questionId, UserSessionUtils.getUserFromSession(session));
+			qnaService.deleteQuestion(questionId, user);
 			return "redirect:/";
 		} catch (CannotDeleteException e) {
 			model.addAttribute("question", qnaService.findById(questionId));
