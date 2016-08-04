@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -14,11 +15,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import core.jdbc.ConnectionManager;
 import core.web.argumentresolver.LoginUserHandlerMethodArgumentResolver;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = { "next.controller" })
+@ComponentScan(basePackages = { "next.controller", "next.dao", "next.service" })
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
     private static final int CACHE_PERIOD = 31556926; // one year
     
@@ -29,6 +31,11 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         bean.setPrefix("/WEB-INF/jsp/");
         bean.setSuffix(".jsp");
         return bean;
+    }
+    
+    @Bean
+    public JdbcTemplate jdbcTemplate() {
+    	return  new JdbcTemplate(ConnectionManager.getDataSource());
     }
     
     @Override

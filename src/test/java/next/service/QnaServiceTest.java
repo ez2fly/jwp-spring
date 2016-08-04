@@ -27,12 +27,12 @@ public class QnaServiceTest {
     private QuestionDao questionDao;
     @Mock
     private AnswerDao answerDao;
-    
+    @Mock
     private QnaService qnaService;
 
     @Before
     public void setup() {
-    	qnaService = new QnaService(questionDao, answerDao);
+    	
     }
     
     @Test(expected = EmptyResultDataAccessException.class)

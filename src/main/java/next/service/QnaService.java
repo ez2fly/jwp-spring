@@ -2,6 +2,8 @@ package next.service;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import next.CannotOperateException;
 import next.dao.AnswerDao;
 import next.dao.QuestionDao;
@@ -9,15 +11,18 @@ import next.model.Answer;
 import next.model.Question;
 import next.model.User;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
 
+@Service
 public class QnaService {
+	@Autowired
 	private QuestionDao questionDao;
+	@Autowired
 	private AnswerDao answerDao;
 
-	public QnaService(QuestionDao questionDao, AnswerDao answerDao) {
-		this.questionDao = questionDao;
-		this.answerDao = answerDao;
+	public QnaService() {
 	}
 
 	public Question findById(long questionId) {
