@@ -17,6 +17,7 @@ import next.service.QnaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Maps;
 
-import core.jdbc.DataAccessException;
 import core.web.argumentresolver.LoginUser;
 
 @RestController
@@ -77,7 +77,7 @@ public class ApiQuestionController {
 		try {
 			answerDao.delete(answerId);
 			return Result.ok();
-		} catch (DataAccessException e) {
+		} catch (DataAccessResourceFailureException e) {
 			return Result.fail(e.getMessage());
 		}
 	}
