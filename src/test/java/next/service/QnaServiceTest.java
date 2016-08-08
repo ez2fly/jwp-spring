@@ -15,6 +15,7 @@ import next.model.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -27,13 +28,9 @@ public class QnaServiceTest {
     private QuestionDao questionDao;
     @Mock
     private AnswerDao answerDao;
-    @Mock
+    @InjectMocks
     private QnaService qnaService;
 
-    @Before
-    public void setup() {
-    	
-    }
     
     @Test(expected = EmptyResultDataAccessException.class)
     public void deleteQuestion_없는_질문() throws Exception {

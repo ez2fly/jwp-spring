@@ -1,6 +1,9 @@
 package next.model;
 
 import java.util.Date;
+import java.util.List;
+
+import next.CannotOperateException;
 
 public class Question {
 	private long questionId;
@@ -83,6 +86,27 @@ public class Question {
 	public void update(Question newQuestion) {
 		this.title = newQuestion.title;
 		this.contents = newQuestion.contents;
+	}
+	
+	public boolean canDelete(User user, List<Answer> answers, String message) {
+		if (user == null || !user.isSameUser(this.writer)) {
+			message = "다른 사용자가 쓴 글을 삭제할 수 없습니다.";
+			return false;
+		}
+		if (answers == null || answers.isEmpty()) { 
+			return true;
+		}
+		
+		boolean canDelete = true;
+		for (Answer answer : answers) {
+			String writer =this.writer;
+			if (!writer.equals(answer.getWriter())) {
+				canDelete = false;
+				message = "다른 사용자가 추가한 댓글이 존재해 삭제할 수 없습니다.";
+				break;
+			}
+		}
+		return canDelete;
 	}
 
 	@Override

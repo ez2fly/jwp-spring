@@ -22,9 +22,6 @@ public class QnaService {
 	@Autowired
 	private AnswerDao answerDao;
 
-	public QnaService() {
-	}
-
 	public Question findById(long questionId) {
 		return questionDao.findById(questionId);
 	}
@@ -39,30 +36,13 @@ public class QnaService {
 			throw new EmptyResultDataAccessException("존재하지 않는 질문입니다.", 1);
 		}
 
-		if (!question.isSameUser(user)) {
-			throw new CannotOperateException("다른 사용자가 쓴 글을 삭제할 수 없습니다.");
-		}
-
+		String message = "Unknown";
 		List<Answer> answers = answerDao.findAllByQuestionId(questionId);
-		if (answers.isEmpty()) {
+		if (question.canDelete(user, answers, message)) {
 			questionDao.delete(questionId);
-			return;
+		} else {
+			throw new CannotOperateException(message);
 		}
-
-		boolean canDelete = true;
-		for (Answer answer : answers) {
-			String writer = question.getWriter();
-			if (!writer.equals(answer.getWriter())) {
-				canDelete = false;
-				break;
-			}
-		}
-
-		if (!canDelete) {
-			throw new CannotOperateException("다른 사용자가 추가한 댓글이 존재해 삭제할 수 없습니다.");
-		}
-
-		questionDao.delete(questionId);
 	}
 
 	public void updateQuestion(long questionId, Question newQuestion, User user) throws CannotOperateException {
