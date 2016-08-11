@@ -30,6 +30,7 @@ public class QnaService {
 		return answerDao.findAllByQuestionId(questionId);
 	}
 
+	// MockitoTest 실습에서 아래 메소드를 객체지향처럼 바꾸는 부분의 확인은 _ git branch 를 jwp-basic _ step10 봐야 함
 	public void deleteQuestion(long questionId, User user) throws CannotOperateException {
 		Question question = questionDao.findById(questionId);
 		if (question == null) {
