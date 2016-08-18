@@ -1,4 +1,4 @@
-package next.aop;
+package next.aspect;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

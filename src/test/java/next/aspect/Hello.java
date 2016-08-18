@@ -1,4 +1,4 @@
-package next.aop;
+package next.aspect;
 
 public interface Hello {
 	String sayHello(String name);

@@ -1,4 +1,4 @@
-package next.aop;
+package next.aspect;
 
 import java.lang.reflect.Proxy;
 

@@ -1,4 +1,4 @@
-package next.aop;
+package next.aspect;
 
 public class HelloTarget implements Hello {
 		public String sayHello(String name) {

@@ -16,6 +16,23 @@
 		<tomcat.version>8.0.15</tomcat.version>
 	</properties>
 	<dependencies>
+	    <!-- spring sop -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>1.8.9</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.8.9</version>
+		</dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-nodep</artifactId>
+			<version>3.2.2</version>
+		</dependency>
+	    
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>

@@ -1,4 +1,4 @@
-package next.aop;
+package next.aspect;
 
 public class HelloUppercase implements Hello {
 	Hello hello;
